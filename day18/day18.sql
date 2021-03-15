@@ -303,3 +303,8 @@ from EMPLOYEES;
 select FIRST_NAME, LAST_NAME, SALARY, HIRE_DATE
 from EMPLOYEES
 where EMPLOYEE_ID = 100;
+
+select JOB_ID
+from EMPLOYEES;
+
+select * from employees where last_name like '%c%'
