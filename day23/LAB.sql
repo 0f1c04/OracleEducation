@@ -17,6 +17,9 @@ from employees e,
 where substr(hire_date, 1, 2) = '07'
   and d.department_id(+) = e.department_id;
 
+select *
+from emp_2007_details;
+
 -- ========================================
 -- 2.
 -- 기존 EMPLOYEES 테이블에 있는 레코드들 중, 'Marketing'부서에 근무하는 직원 레코드를
@@ -38,7 +41,8 @@ from EMPLOYEES_MARKETING;
 -- 새로 생성하는 백업테이블명은 "EMPLOYEES_BACKUP" 이며 기존테이블(EMPLOYEES)의 Index,
 -- Constraint는 필요로 하지 않습니다. 단 급여(Salary)가 5000을 초과하는 직원만 백업테이블 내에 존재해야 합니다.
 -- 위 설명에 해당하는 테이블을 생성하기 위한 sql 스크립트를 작성하시오.
-create table EMPLOYEES_BACKUP as
+create table EMPLOYEES_BACKUP
+as
 select *
 from EMPLOYEES
 where SALARY > 5000;
@@ -69,12 +73,20 @@ select r.region_id,
        postal_code,
        city,
        state_province
-from regions r,
-     countries c,
-     locations l
+from REGIONS r,
+     COUNTRIES c,
+     LOCATIONS l
 where r.region_id = c.region_id
   and c.country_id = l.country_id
 order by region_id, country_id;
+
+-- 강사님 풀이
+create or replace view LOC_DETAILS_view2
+as
+select CITY, COUNTRY_NAME, REGION_NAME
+from LOCATIONS
+         join COUNTRIES using (COUNTRY_ID)
+         join REGIONS using (REGION_ID);
 
 -- ======================================
 -- 5.
@@ -100,6 +112,19 @@ FROM EMPLOYEES E,
 WHERE E.DEPARTMENT_ID = D.DEPARTMENT_ID
 GROUP BY D.DEPARTMENT_ID, DEPARTMENT_NAME
 HAVING COUNT(EMPLOYEE_id) >= 1;
+
+-- 강사님 풀이
+select DEPARTMENT_ID               DEPT_ID,
+       DEPARTMENTS.DEPARTMENT_NAME DEPT_NAME,
+       count(*)                    NUM_EXP,
+       MAX(SALARY)                 MAX_SAL,
+       MIN(SALARY)                 MIN_SAL,
+       avg(SALARY)                 AVG_SAL,
+       sum(SALARY)                 SUM_SAL
+from EMPLOYEES
+         join DEPARTMENTS using (DEPARTMENT_ID)
+group by DEPARTMENT_ID, DEPARTMENTS.DEPARTMENT_NAME
+having count(*) > 1;
 
 -- ========================================
 -- 6.
@@ -164,11 +189,6 @@ create table board
     board_password  varchar2(20)
 );
 
--- DDL (Data Definition Language) : create, alter, drop, rename ...
--- DML (Data Manipulation Language) : insert, delete, update, merge
--- DQL (Data Query Language) : select
--- table 제약조건 : not null, primary key, unique, check, reference key(foreign key)
-
 -- ====================================
 -- 8.locations 테이블에서 2000번 이상의 도시코드, 도시명, 국가명, 그 도시에 있는
 --  부서명을 조회하여 citycode_gt_2000 라는 이름의 view를  생성하는 SQL 문장을 작성하시오.
@@ -176,3 +196,48 @@ create table board
 --
 -- LOCATION_ID	  CITY	  COUNTRY_NAME	  DEPARTMENT_NAME
 
+create or replace view citycode_gt_2000 (LOCATION_ID, CITY, COUNTRY_NAME, DEPARTMENT_NAME)
+as
+select location_id, city, country_name, department_name
+from locations
+         join departments using (location_id)
+         join countries using (country_id)
+where location_id >= 2000;
+
+------------------------------------------------------------------
+-- 시퀀스(SEQUENCE): 자동 번호 발생기, table과 무관, 여러테이블이 공유가능
+-- 시퀀스 정보보기
+DESC USER_SEQUENCES;
+
+select *
+from USER_SEQUENCES;
+
+-- 시퀀스 생성
+select *
+from board; -- BOARD_SEQ 시퀀스가 존재
+
+create sequence board_no_sequence
+    start with 10; -- 10부터 시작하는 board_no_sequence 생성
+
+select board_no_sequence.nextval
+from dual;
+
+desc board;
+
+insert into board (BOARD_SEQ, BOARD_TITLE)
+values (board_no_sequence.nextval, '게시타이틀');
+
+select *
+from board;
+-------
+drop sequence board_no_sequence;
+
+create sequence board_no_sequence
+    start with 100
+    cache 100;
+
+insert into board (BOARD_SEQ, BOARD_TITLE)
+values (board_no_sequence.nextval, '게시타이틀');
+
+select *
+from board;
