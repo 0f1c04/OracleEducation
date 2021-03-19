@@ -1,0 +1,18 @@
+-- 다음 조건의 형태로 테이블을 생성
+-- 테이블 명 : player_t
+-- 테이블에 대한 이해 : K-리그 선수들의 정보를 가지고 있는 테이블
+-- 칼럼명:
+-- player_id	  (선수 고유 ID) 문자 고정자릿수 7자리,
+-- team_id	(팀 고유 ID) 문자 고정자릿수 3자리,
+-- player_name (선수 명) 문자 가변 자릿수 20 자리
+-- nickname (선수 별명) 문자 가변 자릿수 40자리,
+-- join_yyyy(입단년도) 문자 고정 자릿수 4 자리,
+-- position	(포지션) 문자 고정 자릿수 2자리,
+-- back_no	(등번호) 숫자 2자리,
+-- nation(국적) 문자 가변 자릿수 20자리,
+-- birth(생년월일) 날짜,
+-- solar (양/음) 문자 고정 자릿수 1자리,
+-- height (신장) 숫자 3자리,
+-- weight (몸무게) 숫자 3자리
+-- 제약조건 : 기본 키(Primary Key) > player_id (제약 조건명은 PLAYER_ID_PK)
+-- 값이 반드시 존재(NOT NULL) > player_id, team_id
