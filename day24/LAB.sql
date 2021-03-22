@@ -16,3 +16,4 @@
 -- weight (몸무게) 숫자 3자리
 -- 제약조건 : 기본 키(Primary Key) > player_id (제약 조건명은 PLAYER_ID_PK)
 -- 값이 반드시 존재(NOT NULL) > player_id, team_id
+
